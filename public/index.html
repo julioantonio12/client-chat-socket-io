@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.socket.io/4.1.1/socket.io.min.js"></script>
+  <style>
+
+  </style>
+</head>
+<body>
+  <h1>Chat</h1>
+  <div id="messagesContainer"></div>
+  <script>
+    var messagesContainer = document.getElementById("messagesContainer");
+    const socket = io(
+        "http://localhost:3000/ws/messages",
+        {
+          auth: {
+            token: "${token}"
+          },
+          transports: ["websocket"],
+        },
+      );
+    socket.on("message", function(message){
+      var divMessage = document.createElement("div");
+      divMessage.className = "container";
+      divMessage.id = "divMessage";
+
+      var pUserEmisor = document.createElement("p");
+      pUserEmisor.textContent = "userEmisor: " + message.userEmisor.displayName;
+
+      var pMessage = document.createElement("p");
+      pMessage.innerHTML = message.message;
+
+      var spanTime = document.createElement("span");
+      spanTime.class="time-left"
+      spanTime.textContent= "createdAt: " + message.createdAt;
+
+      divMessage.appendChild(pUserEmisor);
+      divMessage.appendChild(pMessage);
+      divMessage.appendChild(spanTime);
+
+      messagesContainer.appendChild(divMessage);
+    });
+  </script>
+</body>
+</html>
